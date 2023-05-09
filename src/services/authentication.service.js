@@ -1,31 +1,58 @@
 export const loginRequest = (email, password) => {
   return new Promise(function (resolve, reject) {
-    setTimeout(() => {
-      if (email === "a" && password === "a") {
-        resolve({
-          uid: 1,
-          email: "user1@email.com",
-        });
-      } else if (email === "b" && password === "b") {
-        resolve({
-          uid: 2,
-          email: "user2@email.com",
-        });
-      } else {
+    return fetch("http://zmjtxnigks.eu11.qoddiapp.com/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          resolve(response.json());
+        } else {
+          reject("Login failed");
+        }
+      })
+      .then((data) => {
+        return {
+          uid: data.uid,
+          email: data.email,
+        };
+      })
+      .catch((error) => {
         reject("Wrong email and/or password");
-      }
-    }, 1000);
+      });
   });
 };
 
 export const createUserRequest = (email, password) => {
   return new Promise(function (resolve, reject) {
-    setTimeout(() => {
-      if (email === "b" && password === "b") {
+    return fetch("http://zmjtxnigks.eu11.qoddiapp.com/signUp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.text();
+        } else {
+          reject("Email already registered");
+        }
+      })
+      .then((data) => {
         resolve("User created!");
-      } else {
-        reject("Email already registered");
-      }
-    }, 1000);
+      })
+      .catch((error) => {
+        reject(error);
+      });
   });
 };
